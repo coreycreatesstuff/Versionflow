@@ -1,0 +1,85 @@
+name: Version Verification Report
+description: Submit live Adobe After Effects opening & render test results to help verify AE 2020–2026 targets.
+title: "[Verify] AE <version>: <result>"
+labels: ["verification", "community-testing"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping verify VersionFlow against real Adobe After Effects installations!
+        Run `.\cli\versionflow.exe verify-target "C:\Path\To\TestProject.aep" --report verification-report.json` against a **copy** of a project and paste the generated JSON below.
+        **Do not upload copyrighted or confidential `.aep` files** unless you own rights to share them.
+
+  - type: dropdown
+    id: target_version
+    attributes:
+      label: Target After Effects Version Tested
+      description: Which installed version of After Effects opened the converted file?
+      options:
+        - Adobe After Effects 2026 (26.x / Format 97)
+        - Adobe After Effects 2025 (25.x / Format 96)
+        - Adobe After Effects 2024 (24.x / Format 95)
+        - Adobe After Effects 2023 (23.x / Format 94)
+        - Adobe After Effects 2022 (22.x / Format 93)
+        - Adobe After Effects 2021 (18.x / Format 93)
+        - Adobe After Effects 2020 (17.x / Format 93)
+    validations:
+      required: true
+
+  - type: input
+    id: ae_build
+    attributes:
+      label: Exact After Effects Build & OS
+      description: Example - AE 2020 17.7 (Build 45) on Windows 11 24H2
+      placeholder: "AE 2020 17.x on Windows 11"
+    validations:
+      required: true
+
+  - type: input
+    id: source_version
+    attributes:
+      label: Source Project Origin Version
+      description: Which AE version created the original project? (e.g., AE 2026 / Format 97)
+      placeholder: "AE 2026 (Format 97)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Live Test Outcome
+      options:
+        - Opened and rendered cleanly (no missing/broken layers)
+        - Opened with expected warnings (missing newer effects/features noted in report)
+        - Opened partially / visual discrepancy
+        - Failed to open or crashed
+    validations:
+      required: true
+
+  - type: textarea
+    id: features_tested
+    attributes:
+      label: Features Present in Test Project
+      description: Check/list which features were in the comp (keyframes, expressions, Classic/Advanced 3D, track mattes, text, effects).
+      placeholder: "- Keyframes & Bezier easing\n- Expressions\n- Track mattes\n- Built-in effects"
+    validations:
+      required: true
+
+  - type: textarea
+    id: verification_json
+    attributes:
+      label: VersionFlow Verification JSON / Output
+      description: Paste the output from `versionflow verify-target --json` (or `verification-report.json`).
+      render: json
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Tester Checks
+      options:
+        - label: I tested a converted copy inside a real installed copy of the target After Effects version above.
+          required: true
+        - label: I removed any private file paths or confidential project details before submitting.
+          required: true

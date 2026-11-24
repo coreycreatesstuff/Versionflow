@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>VersionFlow.Conversion</RootNamespace>
+    <AssemblyName>VersionFlow.Conversion</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VersionFlow.Core\VersionFlow.Core.csproj" />
+    <ProjectReference Include="..\VersionFlow.Formats\VersionFlow.Formats.csproj" />
+    <ProjectReference Include="..\VersionFlow.Compatibility\VersionFlow.Compatibility.csproj" />
+    <ProjectReference Include="..\VersionFlow.Validation\VersionFlow.Validation.csproj" />
+  </ItemGroup>
+</Project>

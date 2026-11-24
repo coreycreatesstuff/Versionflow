@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>VersionFlow.App</RootNamespace>
+    <AssemblyName>VersionFlow</AssemblyName>
+    <ApplicationIcon>..\..\assets\branding\VersionFlow.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\..\assets\branding\VersionFlow.png" Link="Assets\VersionFlow.png" />
+    <Resource Include="..\..\assets\branding\VersionFlow.ico" Link="Assets\VersionFlow.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VersionFlow.Core\VersionFlow.Core.csproj" />
+    <ProjectReference Include="..\VersionFlow.Formats\VersionFlow.Formats.csproj" />
+    <ProjectReference Include="..\VersionFlow.Compatibility\VersionFlow.Compatibility.csproj" />
+    <ProjectReference Include="..\VersionFlow.Validation\VersionFlow.Validation.csproj" />
+    <ProjectReference Include="..\VersionFlow.Conversion\VersionFlow.Conversion.csproj" />
+    <ProjectReference Include="..\VersionFlow.AdobeIntegration\VersionFlow.AdobeIntegration.csproj" />
+    <ProjectReference Include="..\VersionFlow.Infrastructure\VersionFlow.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

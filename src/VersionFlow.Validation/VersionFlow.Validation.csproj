@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>VersionFlow.Validation</RootNamespace>
+    <AssemblyName>VersionFlow.Validation</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VersionFlow.Core\VersionFlow.Core.csproj" />
+    <ProjectReference Include="..\VersionFlow.Formats\VersionFlow.Formats.csproj" />
+  </ItemGroup>
+</Project>

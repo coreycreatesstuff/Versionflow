@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>VersionFlow.Worker</RootNamespace>
+    <AssemblyName>VersionFlow.Worker</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VersionFlow.Core\VersionFlow.Core.csproj" />
+    <ProjectReference Include="..\VersionFlow.Formats\VersionFlow.Formats.csproj" />
+    <ProjectReference Include="..\VersionFlow.Compatibility\VersionFlow.Compatibility.csproj" />
+    <ProjectReference Include="..\VersionFlow.Validation\VersionFlow.Validation.csproj" />
+    <ProjectReference Include="..\VersionFlow.Conversion\VersionFlow.Conversion.csproj" />
+  </ItemGroup>
+</Project>

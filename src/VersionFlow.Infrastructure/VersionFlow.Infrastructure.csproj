@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>VersionFlow.Infrastructure</RootNamespace>
+    <AssemblyName>VersionFlow.Infrastructure</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VersionFlow.Core\VersionFlow.Core.csproj" />
+  </ItemGroup>
+</Project>

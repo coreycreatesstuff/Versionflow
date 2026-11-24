@@ -1,0 +1,1056 @@
+<Window x:Class="VersionFlow.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:VersionFlow.App.ViewModels"
+        xmlns:core="clr-namespace:VersionFlow.Core.Models;assembly=VersionFlow.Core"
+        Title="VersionFlow 1.0"
+        Icon="Assets/VersionFlow.ico"
+        Width="1140" Height="790"
+        MinWidth="840" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        AllowDrop="True"
+        Drop="Window_Drop"
+        DragOver="Window_DragOver"
+        DragLeave="Window_DragLeave"
+        KeyDown="Window_KeyDown"
+        Closing="Window_Closing">
+
+  <Grid Background="{DynamicResource BaseBgBrush}">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="34" />
+    </Grid.RowDefinitions>
+
+    <Grid Grid.Row="0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="216" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+
+      <!-- Left Navigation Sidebar -->
+      <Border Grid.Column="0"
+              Background="{DynamicResource SecondaryBgBrush}"
+              BorderBrush="{DynamicResource BorderBrushSubtle}"
+              BorderThickness="0,0,1,0"
+              Padding="14,20">
+        <DockPanel LastChildFill="False">
+          <!-- Clean Brand Wordmark -->
+          <StackPanel DockPanel.Dock="Top" Margin="10,0,6,24">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+              <TextBlock Text="VersionFlow" FontFamily="Inter, Segoe UI Variable Display, Segoe UI" FontSize="17" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+              <Border Background="{DynamicResource AccentTintBrush}" CornerRadius="5" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
+                <TextBlock Text="1.0" FontSize="10.5" FontWeight="SemiBold" Foreground="{DynamicResource AccentLightBrush}" />
+              </Border>
+            </StackPanel>
+            <TextBlock Text="Create forward. Convert backward." FontSize="11" Foreground="{DynamicResource TextMutedBrush}" Margin="0,3,0,0" />
+          </StackPanel>
+
+          <!-- Primary Navigation -->
+          <StackPanel DockPanel.Dock="Top">
+            <RadioButton Style="{StaticResource NavButtonStyle}" GroupName="MainNav" IsChecked="True"
+                         Command="{Binding NavigateCommand}" CommandParameter="{x:Static vm:NavPage.Convert}"
+                         AutomationProperties.Name="Convert project">
+              <StackPanel Orientation="Horizontal">
+                <Grid Style="{StaticResource NavIconBoxStyle}">
+                  <Path Data="{StaticResource GeomConvert}" Style="{StaticResource OutlineIconPathStyle}"
+                        Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                </Grid>
+                <TextBlock Text="Convert" VerticalAlignment="Center" FontWeight="Medium" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+              </StackPanel>
+            </RadioButton>
+            <RadioButton Style="{StaticResource NavButtonStyle}" GroupName="MainNav"
+                         Command="{Binding NavigateCommand}" CommandParameter="{x:Static vm:NavPage.BatchQueue}"
+                         AutomationProperties.Name="Batch Queue">
+              <StackPanel Orientation="Horizontal">
+                <Grid Style="{StaticResource NavIconBoxStyle}">
+                  <Path Data="{StaticResource GeomBatchQueue}" Style="{StaticResource OutlineIconPathStyle}"
+                        Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                </Grid>
+                <TextBlock Text="Batch Queue" VerticalAlignment="Center" FontWeight="Medium" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+              </StackPanel>
+            </RadioButton>
+            <RadioButton Style="{StaticResource NavButtonStyle}" GroupName="MainNav"
+                         Command="{Binding NavigateCommand}" CommandParameter="{x:Static vm:NavPage.History}"
+                         AutomationProperties.Name="Conversion History">
+              <StackPanel Orientation="Horizontal">
+                <Grid Style="{StaticResource NavIconBoxStyle}">
+                  <Path Data="{StaticResource GeomHistory}" Style="{StaticResource OutlineIconPathStyle}"
+                        Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                </Grid>
+                <TextBlock Text="History" VerticalAlignment="Center" FontWeight="Medium" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+              </StackPanel>
+            </RadioButton>
+            <RadioButton Style="{StaticResource NavButtonStyle}" GroupName="MainNav"
+                         Command="{Binding NavigateCommand}" CommandParameter="{x:Static vm:NavPage.Compatibility}"
+                         AutomationProperties.Name="Compatibility Matrix">
+              <StackPanel Orientation="Horizontal">
+                <Grid Style="{StaticResource NavIconBoxStyle}">
+                  <Path Data="{StaticResource GeomShieldCheck}" Style="{StaticResource OutlineIconPathStyle}"
+                        Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                </Grid>
+                <TextBlock Text="Compatibility" VerticalAlignment="Center" FontWeight="Medium" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+              </StackPanel>
+            </RadioButton>
+            <RadioButton Style="{StaticResource NavButtonStyle}" GroupName="MainNav"
+                         Command="{Binding NavigateCommand}" CommandParameter="{x:Static vm:NavPage.Settings}"
+                         AutomationProperties.Name="Settings">
+              <StackPanel Orientation="Horizontal">
+                <Grid Style="{StaticResource NavIconBoxStyle}">
+                  <Path Data="{StaticResource GeomSettings}" Style="{StaticResource OutlineIconPathStyle}"
+                        Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                </Grid>
+                <TextBlock Text="Settings" VerticalAlignment="Center" FontWeight="Medium" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+              </StackPanel>
+            </RadioButton>
+          </StackPanel>
+
+          <!-- Secondary Navigation -->
+          <StackPanel DockPanel.Dock="Bottom">
+            <Border Height="1" Background="{DynamicResource BorderBrushSubtle}" Margin="4,0,4,10" />
+            <RadioButton Style="{StaticResource NavButtonStyle}" GroupName="MainNav"
+                         Command="{Binding NavigateCommand}" CommandParameter="{x:Static vm:NavPage.Help}"
+                         AutomationProperties.Name="Help">
+              <StackPanel Orientation="Horizontal">
+                <Grid Style="{StaticResource NavIconBoxStyle}">
+                  <Path Data="{StaticResource GeomHelpCircle}" Style="{StaticResource OutlineIconPathStyle}"
+                        Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                </Grid>
+                <TextBlock Text="Help" VerticalAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+              </StackPanel>
+            </RadioButton>
+            <RadioButton Style="{StaticResource NavButtonStyle}" GroupName="MainNav"
+                         Command="{Binding NavigateCommand}" CommandParameter="{x:Static vm:NavPage.About}"
+                         AutomationProperties.Name="About VersionFlow">
+              <StackPanel Orientation="Horizontal">
+                <Grid Style="{StaticResource NavIconBoxStyle}">
+                  <Path Data="{StaticResource GeomInfoCircle}" Style="{StaticResource OutlineIconPathStyle}"
+                        Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                </Grid>
+                <TextBlock Text="About" VerticalAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+              </StackPanel>
+            </RadioButton>
+          </StackPanel>
+        </DockPanel>
+      </Border>
+
+      <!-- Main Page Viewport with subtle ambient top lighting -->
+      <Grid Grid.Column="1" Background="{DynamicResource CanvasAmbientGlow}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="36,24">
+          <Grid x:Name="PageViewport" MaxWidth="840" HorizontalAlignment="Stretch">
+          <Grid.RenderTransform>
+            <TranslateTransform x:Name="PageSlideTransform" Y="0" />
+          </Grid.RenderTransform>
+
+          <!-- ==================== 1. CONVERT PAGE ==================== -->
+          <StackPanel>
+            <StackPanel.Style>
+              <Style TargetType="StackPanel">
+                <Setter Property="Visibility" Value="Collapsed" />
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding CurrentPage}" Value="{x:Static vm:NavPage.Convert}">
+                    <Setter Property="Visibility" Value="Visible" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </StackPanel.Style>
+
+            <TextBlock Text="Convert project" Style="{StaticResource PageTitleStyle}" />
+            <TextBlock Text="Make your After Effects project compatible with an older release without altering your original file."
+                       Margin="0,4,0,18" Foreground="{DynamicResource TextSecondaryBrush}" />
+
+            <!-- Drop Zone (when no file loaded) -->
+            <Grid Visibility="{Binding HasLoadedProject, Converter={StaticResource InvBoolToVis}}" Margin="0,0,0,16">
+              <Border CornerRadius="12" Padding="26,26">
+                <Border.Background>
+                  <RadialGradientBrush Center="0.5,0.2" GradientOrigin="0.5,0.2" RadiusX="0.7" RadiusY="0.9">
+                    <GradientStop Color="#221D35" Offset="0" />
+                    <GradientStop Color="#161620" Offset="1" />
+                  </RadialGradientBrush>
+                </Border.Background>
+                <StackPanel HorizontalAlignment="Center">
+                  <Border Width="44" Height="44" CornerRadius="11" Background="{DynamicResource AccentTintBrush}"
+                          BorderBrush="{DynamicResource AccentBrush}" BorderThickness="1" HorizontalAlignment="Center" Margin="0,0,0,12">
+                    <Path Data="{StaticResource GeomUpload}" Style="{StaticResource OutlineIconPathStyle}" Width="20" Height="20"
+                          Stroke="{DynamicResource AccentLightBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                  </Border>
+                  <TextBlock Text="Drop your After Effects project here" FontSize="15.5" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center" />
+                  <TextBlock Text="Supports .aep (binary RIFX) and .aepx (XML) • Ctrl+V to paste file path"
+                             Margin="0,4,0,14" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" />
+                  <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Content="Browse files" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding BrowseSourceProjectCommand}" />
+                    <Button Content="Paste path" Style="{StaticResource SecondaryButtonStyle}" Margin="8,0,0,0" Command="{Binding PastePathFromClipboardCommand}" />
+                  </StackPanel>
+                </StackPanel>
+              </Border>
+              <Rectangle x:Name="DropZoneOutline" RadiusX="12" RadiusY="12" Stroke="{DynamicResource BorderHoverBrush}" StrokeThickness="1.3" StrokeDashArray="5 4" IsHitTestVisible="False" />
+            </Grid>
+
+            <!-- Imported Project Card (when file loaded) -->
+            <Border x:Name="LoadedProjectCard"
+                    Visibility="{Binding HasLoadedProject, Converter={StaticResource BoolToVis}}"
+                    Style="{StaticResource CardBorderStyle}" Padding="14,12" Margin="0,0,0,14">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Border Width="42" Height="42" CornerRadius="9" Background="{DynamicResource AccentTintBrush}" BorderBrush="{DynamicResource BorderHoverBrush}" BorderThickness="1" VerticalAlignment="Center">
+                  <Path Data="{StaticResource GeomFile}" Style="{StaticResource OutlineIconPathStyle}" Width="18" Height="18"
+                        Stroke="{DynamicResource AccentLightBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+                <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
+                  <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding LoadedFileName}" FontSize="14.5" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                    <Border Background="{Binding DetectionConfidenceText, Converter={StaticResource StatusBrush}, ConverterParameter=bg}"
+                            BorderBrush="{Binding DetectionConfidenceText, Converter={StaticResource StatusBrush}, ConverterParameter=border}"
+                            BorderThickness="1" CornerRadius="5" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
+                      <TextBlock Text="{Binding DetectionConfidenceText}" FontSize="10.5" FontWeight="SemiBold"
+                                 Foreground="{Binding DetectionConfidenceText, Converter={StaticResource StatusBrush}, ConverterParameter=fg}" />
+                    </Border>
+                  </StackPanel>
+                  <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
+                    <TextBlock Text="{Binding LoadedFileTypeText}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" />
+                    <TextBlock Text=" • " FontSize="12" Foreground="{DynamicResource TextMutedBrush}" />
+                    <TextBlock Text="{Binding LoadedFileSizeText}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" />
+                    <TextBlock Text=" • " FontSize="12" Foreground="{DynamicResource TextMutedBrush}" />
+                    <TextBlock Text="{Binding LoadedProjectStatsText}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" />
+                  </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                  <Button Content="Replace" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding BrowseSourceProjectCommand}" />
+                  <Button Content="✕" Style="{StaticResource SecondaryButtonStyle}" Margin="8,0,0,0" ToolTip="Remove project" Command="{Binding RemoveLoadedProjectCommand}" />
+                </StackPanel>
+              </Grid>
+            </Border>
+
+            <!-- Source -> Target Row -->
+            <Grid Margin="0,0,0,14">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="36" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+
+              <StackPanel Grid.Column="0">
+                <TextBlock Text="Source version" FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6" />
+                <Border Style="{StaticResource InputBoxBorderStyle}">
+                  <TextBlock Text="{Binding DetectedVersionText}" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
+                </Border>
+              </StackPanel>
+
+              <Path Grid.Column="1" Data="{StaticResource GeomArrowRight}" Style="{StaticResource OutlineIconPathStyle}"
+                    Width="16" Height="16" Stroke="{DynamicResource AccentLightBrush}"
+                    HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,12" />
+
+              <StackPanel Grid.Column="2">
+                <TextBlock Text="Target version" FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6" />
+                <ComboBox ItemsSource="{Binding AvailableTargets}"
+                          SelectedItem="{Binding SelectedTargetVersion}"
+                          AutomationProperties.Name="Target After Effects version">
+                  <ComboBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type core:AfterEffectsVersionInfo}">
+                      <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding ShortName}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
+                        <Border Background="{Binding CompatibilityStatus, Converter={StaticResource StatusBrush}, ConverterParameter=bg}"
+                                BorderBrush="{Binding CompatibilityStatus, Converter={StaticResource StatusBrush}, ConverterParameter=border}"
+                                BorderThickness="1" CornerRadius="5" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
+                          <TextBlock Text="{Binding CompatibilityStatus, Converter={StaticResource EnumDisplay}}" FontSize="11" FontWeight="SemiBold"
+                                     Foreground="{Binding CompatibilityStatus, Converter={StaticResource StatusBrush}, ConverterParameter=fg}" />
+                        </Border>
+                      </StackPanel>
+                    </DataTemplate>
+                  </ComboBox.ItemTemplate>
+                </ComboBox>
+              </StackPanel>
+            </Grid>
+
+            <!-- Compatibility Analysis Card -->
+            <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,14">
+              <StackPanel>
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                  </Grid.ColumnDefinitions>
+                  <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Path Data="{StaticResource GeomShieldCheck}" Style="{StaticResource OutlineIconPathStyle}" Width="16" Height="16"
+                          Stroke="{DynamicResource AccentLightBrush}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                    <TextBlock Text="Compatibility analysis" FontSize="14.5" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
+                  </StackPanel>
+                  <Border Grid.Column="1"
+                          Background="{Binding CompatibilityStatusBadge, Converter={StaticResource StatusBrush}, ConverterParameter=bg}"
+                          BorderBrush="{Binding CompatibilityStatusBadge, Converter={StaticResource StatusBrush}, ConverterParameter=border}"
+                          BorderThickness="1" CornerRadius="6" Padding="9,3">
+                    <TextBlock Text="{Binding CompatibilityStatusBadge}" FontSize="11.5" FontWeight="SemiBold"
+                               Foreground="{Binding CompatibilityStatusBadge, Converter={StaticResource StatusBrush}, ConverterParameter=fg}" />
+                  </Border>
+                </Grid>
+
+                <!-- Color-coded breakdown pills when project is loaded -->
+                <WrapPanel Visibility="{Binding HasLoadedProject, Converter={StaticResource BoolToVis}}" Margin="0,9,0,4">
+                  <Border Background="#1E34D399" BorderBrush="#4A34D399" BorderThickness="1" CornerRadius="6" Padding="8,3" Margin="0,0,6,4">
+                    <TextBlock FontSize="11.5" FontWeight="SemiBold" Foreground="{DynamicResource SuccessBrush}"
+                               Text="{Binding CurrentReport.CompatibleCount, StringFormat='{}{0} Compatible'}" />
+                  </Border>
+                  <Border Background="#248B5CF6" BorderBrush="#528B5CF6" BorderThickness="1" CornerRadius="6" Padding="8,3" Margin="0,0,6,4">
+                    <TextBlock FontSize="11.5" FontWeight="SemiBold" Foreground="{DynamicResource AccentLightBrush}"
+                               Text="{Binding CurrentReport.ConvertibleCount, StringFormat='{}{0} Convertible'}" />
+                  </Border>
+                  <Border Background="#1EFBBF24" BorderBrush="#4AFBBF24" BorderThickness="1" CornerRadius="6" Padding="8,3" Margin="0,0,6,4">
+                    <TextBlock FontSize="11.5" FontWeight="SemiBold" Foreground="{DynamicResource WarningBrush}"
+                               Text="{Binding CurrentReport.WarningCount, StringFormat='{}{0} Warnings'}" />
+                  </Border>
+                  <Border Background="#1EF87171" BorderBrush="#4AF87171" BorderThickness="1" CornerRadius="6" Padding="8,3" Margin="0,0,6,4"
+                          Visibility="{Binding CurrentReport.UnsupportedCount, Converter={StaticResource NullToVis}}">
+                    <TextBlock FontSize="11.5" FontWeight="SemiBold" Foreground="{DynamicResource ErrorBrush}"
+                               Text="{Binding CurrentReport.UnsupportedCount, StringFormat='{}{0} Unsupported'}" />
+                  </Border>
+                </WrapPanel>
+
+                <TextBlock Text="{Binding CompatibilitySummaryLine}" Margin="0,6,0,7" TextWrapping="Wrap"
+                           Foreground="{DynamicResource TextSecondaryBrush}" />
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                  </Grid.ColumnDefinitions>
+                  <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Recommended method: " FontSize="12" Foreground="{DynamicResource TextMutedBrush}" />
+                    <TextBlock Text="{Binding RecommendedMethodText}" FontSize="12" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Medium" />
+                  </StackPanel>
+                  <Button Grid.Column="1" Content="{Binding ShowDetailsButtonText}" Style="{StaticResource SecondaryButtonStyle}"
+                          Padding="12,5" MinHeight="30" FontSize="12" Command="{Binding ToggleCompatibilityDetailsCommand}" />
+                </Grid>
+
+                <!-- Expandable Findings List -->
+                <StackPanel Visibility="{Binding ShowCompatibilityDetails, Converter={StaticResource BoolToVis}}" Margin="0,12,0,0">
+                  <Border Height="1" Background="{DynamicResource BorderBrushSubtle}" Margin="0,0,0,10" />
+                  <ItemsControl ItemsSource="{Binding CompatibilityFindings}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate DataType="{x:Type vm:ApprovalFindingItem}">
+                        <Border Background="{DynamicResource ElevatedSurfaceBrush}" BorderBrush="{DynamicResource BorderBrushSubtle}" BorderThickness="1" CornerRadius="8" Padding="12,9" Margin="0,0,0,6">
+                          <Grid>
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="Auto" />
+                              <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <CheckBox IsChecked="{Binding IsApproved}"
+                                      Visibility="{Binding Finding.RequiresUserApproval, Converter={StaticResource BoolToVis}}"
+                                      Margin="0,0,10,0" ToolTip="Approve transformation in Compatibility Mode" />
+                            <StackPanel Grid.Column="1">
+                              <WrapPanel>
+                                <Border Background="{Binding Finding.Classification, Converter={StaticResource StatusBrush}, ConverterParameter=bg}"
+                                        BorderBrush="{Binding Finding.Classification, Converter={StaticResource StatusBrush}, ConverterParameter=border}"
+                                        BorderThickness="1" CornerRadius="4" Padding="6,1" Margin="0,0,8,2">
+                                  <TextBlock Text="{Binding Finding.Classification}" FontSize="10.5" FontWeight="Bold"
+                                             Foreground="{Binding Finding.Classification, Converter={StaticResource StatusBrush}, ConverterParameter=fg}" />
+                                </Border>
+                                <TextBlock Text="{Binding Finding.FeatureName}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding Finding.Location, StringFormat='  •  {0}'}" FontSize="11.5" Foreground="{DynamicResource TextMutedBrush}"
+                                           Visibility="{Binding Finding.Location, Converter={StaticResource NullToVis}}" VerticalAlignment="Center" />
+                              </WrapPanel>
+                              <TextBlock Text="{Binding Finding.Description}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Margin="0,3,0,0" />
+                            </StackPanel>
+                          </Grid>
+                        </Border>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+
+                  <StackPanel Orientation="Horizontal" Margin="0,6,0,0"
+                              Visibility="{Binding HasLoadedProject, Converter={StaticResource BoolToVis}}">
+                    <Button Content="Search folder for missing assets" Style="{StaticResource SecondaryButtonStyle}"
+                            FontSize="12" Padding="10,5" MinHeight="30" Command="{Binding SearchMissingAssetsFolderCommand}" />
+                    <CheckBox Content="Package found assets alongside output" IsChecked="{Binding PackageAssets}" Margin="14,0,0,0" />
+                  </StackPanel>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <!-- Output Location & Segmented Conversion Mode -->
+            <Grid Margin="0,0,0,16">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.15*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1*" />
+              </Grid.ColumnDefinitions>
+
+              <StackPanel Grid.Column="0">
+                <TextBlock Text="Output location" FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6" />
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                  </Grid.ColumnDefinitions>
+                  <Grid>
+                    <TextBox Text="{Binding OutputDirectoryText, UpdateSourceTrigger=PropertyChanged}"
+                             AutomationProperties.Name="Output directory" />
+                    <TextBlock Text="Same folder as source project" IsHitTestVisible="False" VerticalAlignment="Center" Margin="13,0,0,0"
+                               Foreground="{DynamicResource TextMutedBrush}"
+                               Visibility="{Binding OutputDirectoryText, Converter={StaticResource InvNullToVis}}" />
+                  </Grid>
+                  <Button Grid.Column="1" Content="Browse..." Style="{StaticResource SecondaryButtonStyle}" Margin="8,0,0,0" Command="{Binding BrowseOutputDirectoryCommand}" />
+                </Grid>
+                <TextBlock Text="{Binding OutputPreviewFileName, StringFormat='Output: {0}'}"
+                           Visibility="{Binding OutputPreviewFileName, Converter={StaticResource NullToVis}}"
+                           Margin="0,5,0,0" FontSize="11.5" Foreground="{DynamicResource TextMutedBrush}" TextTrimming="CharacterEllipsis" />
+              </StackPanel>
+
+              <StackPanel Grid.Column="2">
+                <TextBlock Text="Conversion mode" FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6" />
+                <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrushSubtle}" BorderThickness="1" CornerRadius="9" Padding="3" MinHeight="40">
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <RadioButton Grid.Column="0" Style="{StaticResource SegmentedOptionStyle}" GroupName="ConvertMode" Content="Compatibility"
+                                 IsChecked="{Binding SelectedMode, Converter={StaticResource EqConv}, ConverterParameter={x:Static core:ConversionMode.Compatibility}, Mode=OneWay}"
+                                 Command="{Binding SetModeCommand}" CommandParameter="{x:Static core:ConversionMode.Compatibility}" />
+                    <RadioButton Grid.Column="1" Style="{StaticResource SegmentedOptionStyle}" GroupName="ConvertMode" Content="Safe"
+                                 IsChecked="{Binding SelectedMode, Converter={StaticResource EqConv}, ConverterParameter={x:Static core:ConversionMode.Safe}, Mode=OneWay}"
+                                 Command="{Binding SetModeCommand}" CommandParameter="{x:Static core:ConversionMode.Safe}" />
+                    <RadioButton Grid.Column="2" Style="{StaticResource SegmentedOptionStyle}" GroupName="ConvertMode" Content="Experimental"
+                                 IsChecked="{Binding SelectedMode, Converter={StaticResource EqConv}, ConverterParameter={x:Static core:ConversionMode.Experimental}, Mode=OneWay}"
+                                 Command="{Binding SetModeCommand}" CommandParameter="{x:Static core:ConversionMode.Experimental}" />
+                  </Grid>
+                </Border>
+                <TextBlock Text="{Binding ModeDescription}" FontSize="11.5" Foreground="{DynamicResource TextMutedBrush}" Margin="0,5,0,0" TextWrapping="Wrap" />
+              </StackPanel>
+            </Grid>
+
+            <Border Visibility="{Binding IsExperimentalMode, Converter={StaticResource BoolToVis}}"
+                    Background="{DynamicResource ElevatedSurfaceBrush}" BorderBrush="{DynamicResource WarningBrush}"
+                    BorderThickness="1" CornerRadius="8" Padding="12,10" Margin="0,0,0,14">
+              <CheckBox IsChecked="{Binding ExperimentalAcknowledged}"
+                        Content="I understand Experimental Mode applies unverified cross-format metadata changes and I will test the copy in target After Effects." />
+            </Border>
+
+            <!-- Primary CTA & Progress -->
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <Button Style="{StaticResource PrimaryButtonStyle}"
+                      IsEnabled="{Binding HasLoadedProject}"
+                      Command="{Binding ConvertProjectCommand}">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                  <Path Data="{StaticResource GeomZap}" Style="{StaticResource OutlineIconPathStyle}" Width="15" Height="15"
+                        Stroke="#FFFFFF" Margin="0,0,8,0" VerticalAlignment="Center" />
+                  <TextBlock Text="{Binding PrimaryConvertButtonText}" Foreground="#FFFFFF" FontWeight="SemiBold" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+              <Button Grid.Column="1" Content="Cancel"
+                      Style="{StaticResource SecondaryButtonStyle}"
+                      Margin="10,0,0,0"
+                      Visibility="{Binding IsConverting, Converter={StaticResource BoolToVis}}"
+                      Command="{Binding CancelConversionCommand}" />
+            </Grid>
+
+            <StackPanel Orientation="Horizontal" Margin="0,11,0,0" HorizontalAlignment="Center">
+              <Path Data="{StaticResource GeomLock}" Style="{StaticResource OutlineIconPathStyle}" Width="13" Height="13"
+                    Stroke="{DynamicResource TextMutedBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
+              <TextBlock Text="Your original project will never be modified." FontSize="12" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Progress Card -->
+            <Border Visibility="{Binding IsConverting, Converter={StaticResource BoolToVis}}"
+                    Style="{StaticResource CardBorderStyle}" Margin="0,14,0,0">
+              <StackPanel>
+                <Grid>
+                  <TextBlock Text="{Binding ConversionStageLabel}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                  <TextBlock Text="{Binding ConversionElapsedText}" HorizontalAlignment="Right" Foreground="{DynamicResource TextSecondaryBrush}" />
+                </Grid>
+                <ProgressBar Value="{Binding ConversionProgressPercent}" IsIndeterminate="{Binding IsProgressIndeterminate}"
+                             Height="6" Margin="0,10,0,6" Foreground="{DynamicResource AccentBrush}" Background="{DynamicResource ElevatedSurfaceBrush}" BorderThickness="0" />
+                <TextBlock Text="{Binding ConversionDetailLabel}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" />
+              </StackPanel>
+            </Border>
+
+            <!-- Result Card -->
+            <Border x:Name="ResultCardBorder"
+                    Visibility="{Binding HasResult, Converter={StaticResource BoolToVis}}"
+                    Style="{StaticResource CardBorderStyle}" BorderBrush="{DynamicResource BorderHoverBrush}" Margin="0,14,0,0">
+              <StackPanel>
+                <Grid Margin="0,0,0,8">
+                  <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Path Data="{StaticResource GeomCheckCircle}" Style="{StaticResource OutlineIconPathStyle}" Width="18" Height="18"
+                          Stroke="{Binding LastResult.FinalState, Converter={StaticResource StatusBrush}, ConverterParameter=fg}"
+                          Margin="0,0,8,0" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding LastResult.FinalState, Converter={StaticResource EnumDisplay}}" FontSize="15.5" FontWeight="SemiBold"
+                               Foreground="{Binding LastResult.FinalState, Converter={StaticResource StatusBrush}, ConverterParameter=fg}" VerticalAlignment="Center" />
+                  </StackPanel>
+                  <Border HorizontalAlignment="Right"
+                          Background="{Binding LastResult.Validation.AchievedLevel, Converter={StaticResource StatusBrush}, ConverterParameter=bg}"
+                          BorderBrush="{Binding LastResult.Validation.AchievedLevel, Converter={StaticResource StatusBrush}, ConverterParameter=border}"
+                          BorderThickness="1" CornerRadius="6" Padding="8,3"
+                          Visibility="{Binding LastResult.Succeeded, Converter={StaticResource BoolToVis}}">
+                    <TextBlock Text="{Binding LastResult.Validation.AchievedLevel, Converter={StaticResource EnumDisplay}}" FontSize="11.5" FontWeight="SemiBold"
+                               Foreground="{Binding LastResult.Validation.AchievedLevel, Converter={StaticResource StatusBrush}, ConverterParameter=fg}" />
+                  </Border>
+                </Grid>
+
+                <TextBlock Visibility="{Binding LastResult.Succeeded, Converter={StaticResource BoolToVis}}"
+                           Text="{Binding LastResult.Validation.TargetAppVerificationSummary}"
+                           TextWrapping="Wrap" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,8" />
+
+                <TextBlock Visibility="{Binding LastResult.Succeeded, Converter={StaticResource InvBoolToVis}}"
+                           Text="{Binding LastResult.UserErrorMessage}"
+                           TextWrapping="Wrap" Foreground="{DynamicResource ErrorBrush}" Margin="0,0,0,8" />
+
+                <TextBlock Visibility="{Binding LastResult.OutputPath, Converter={StaticResource NullToVis}}"
+                           Text="{Binding LastResult.OutputPath, StringFormat='Output: {0}'}"
+                           FontSize="12" Foreground="{DynamicResource TextPrimaryBrush}" TextWrapping="Wrap" Margin="0,0,0,4" />
+
+                <TextBlock Visibility="{Binding LastResult.SourceSha256, Converter={StaticResource NullToVis}}"
+                           Text="{Binding LastResult.SourceSha256, StringFormat='Source SHA-256 (verified unmodified): {0}'}"
+                           FontSize="11" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap" Margin="0,0,0,12" />
+
+                <WrapPanel>
+                  <Button Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                          Visibility="{Binding LastResult.OutputPath, Converter={StaticResource NullToVis}}"
+                          Command="{Binding OpenOutputFolderCommand}">
+                    <StackPanel Orientation="Horizontal">
+                      <Path Data="{StaticResource GeomFolder}" Style="{StaticResource OutlineIconPathStyle}" Width="14" Height="14" Stroke="{DynamicResource TextPrimaryBrush}" Margin="0,0,6,0" />
+                      <TextBlock Text="Open output folder" />
+                    </StackPanel>
+                  </Button>
+                  <Button Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                          Visibility="{Binding LastResult.OutputPath, Converter={StaticResource NullToVis}}"
+                          Command="{Binding CopyOutputPathCommand}">
+                    <StackPanel Orientation="Horizontal">
+                      <Path Data="{StaticResource GeomCopy}" Style="{StaticResource OutlineIconPathStyle}" Width="14" Height="14" Stroke="{DynamicResource TextPrimaryBrush}" Margin="0,0,6,0" />
+                      <TextBlock Text="Copy path" />
+                    </StackPanel>
+                  </Button>
+                  <Button Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                          Visibility="{Binding LastResult.ReportHtmlPath, Converter={StaticResource NullToVis}}"
+                          Command="{Binding ViewConversionReportCommand}">
+                    <StackPanel Orientation="Horizontal">
+                      <Path Data="{StaticResource GeomFileText}" Style="{StaticResource OutlineIconPathStyle}" Width="14" Height="14" Stroke="{DynamicResource TextPrimaryBrush}" Margin="0,0,6,0" />
+                      <TextBlock Text="View report" />
+                    </StackPanel>
+                  </Button>
+                  <Button Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                          Visibility="{Binding CanOpenOutputInTargetAe, Converter={StaticResource BoolToVis}}"
+                          Command="{Binding OpenOutputInTargetAeCommand}">
+                    <StackPanel Orientation="Horizontal">
+                      <Path Data="{StaticResource GeomExternalLink}" Style="{StaticResource OutlineIconPathStyle}" Width="14" Height="14" Stroke="{DynamicResource AccentLightBrush}" Margin="0,0,6,0" />
+                      <TextBlock Text="Open in Target AE" Foreground="{DynamicResource AccentLightBrush}" />
+                    </StackPanel>
+                  </Button>
+                  <Button Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                          Visibility="{Binding CanRetryInCompatibilityMode, Converter={StaticResource BoolToVis}}"
+                          Command="{Binding SwitchToCompatibilityAndRetryCommand}">
+                    <StackPanel Orientation="Horizontal">
+                      <Path Data="{StaticResource GeomZap}" Style="{StaticResource OutlineIconPathStyle}" Width="14" Height="14" Stroke="{DynamicResource AccentLightBrush}" Margin="0,0,6,0" />
+                      <TextBlock Text="Switch to Compatibility Mode &amp; Retry" Foreground="{DynamicResource AccentLightBrush}" FontWeight="SemiBold" />
+                    </StackPanel>
+                  </Button>
+                  <Button Content="Technical details" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                          Visibility="{Binding LastResult.TechnicalDetails, Converter={StaticResource NullToVis}}"
+                          Command="{Binding ToggleTechnicalErrorDetailsCommand}" />
+                </WrapPanel>
+
+                <TextBox Visibility="{Binding ShowTechnicalErrorDetails, Converter={StaticResource BoolToVis}}"
+                         Text="{Binding LastResult.TechnicalDetails, Mode=OneWay}"
+                         IsReadOnly="True" Height="110" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                         VerticalContentAlignment="Top" FontFamily="Cascadia Mono, Consolas" FontSize="11.5" Margin="0,8,0,0" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+          <!-- ==================== 2. BATCH QUEUE PAGE ==================== -->
+          <StackPanel>
+            <StackPanel.Style>
+              <Style TargetType="StackPanel">
+                <Setter Property="Visibility" Value="Collapsed" />
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding CurrentPage}" Value="{x:Static vm:NavPage.BatchQueue}">
+                    <Setter Property="Visibility" Value="Visible" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </StackPanel.Style>
+
+            <TextBlock Text="Batch Queue" Style="{StaticResource PageTitleStyle}" />
+            <TextBlock Text="Queue multiple .aep and .aepx projects with safe bounded concurrency." Margin="0,4,0,18" Foreground="{DynamicResource TextSecondaryBrush}" />
+
+            <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,14">
+              <WrapPanel VerticalAlignment="Center">
+                <Button Content="+ Add Projects" Style="{StaticResource PrimaryButtonStyle}" Padding="16,9" MinHeight="38" Margin="0,0,10,4"
+                        Command="{Binding AddFilesToBatchCommand}" />
+                <ComboBox ItemsSource="{Binding AvailableTargets}" SelectedItem="{Binding BatchGlobalTarget}"
+                          Width="150" Margin="0,0,8,4">
+                  <ComboBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type core:AfterEffectsVersionInfo}">
+                      <TextBlock Text="{Binding ShortName}" Foreground="{DynamicResource TextPrimaryBrush}" />
+                    </DataTemplate>
+                  </ComboBox.ItemTemplate>
+                </ComboBox>
+                <ComboBox ItemsSource="{Binding ConversionModes}" SelectedItem="{Binding BatchGlobalMode}" Width="190" Margin="0,0,8,4">
+                  <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                      <TextBlock Text="{Binding Converter={StaticResource EnumDisplay}}" Foreground="{DynamicResource TextPrimaryBrush}" />
+                    </DataTemplate>
+                  </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button Content="Apply to queued" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,4"
+                        Command="{Binding ApplyGlobalTargetToBatchCommand}" />
+                <Button Content="Output folder..." Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,4"
+                        Command="{Binding BrowseBatchOutputDirCommand}" />
+              </WrapPanel>
+            </Border>
+
+            <Grid>
+              <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrushSubtle}" BorderThickness="1" CornerRadius="12">
+                <Grid>
+                  <Border x:Name="BatchGridMask" Background="Black" CornerRadius="11" />
+                  <DataGrid ItemsSource="{Binding BatchJobs}" SelectedItem="{Binding SelectedBatchJob}"
+                            AutoGenerateColumns="False" CanUserAddRows="False" Height="340" BorderThickness="0"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <DataGrid.OpacityMask>
+                      <VisualBrush Visual="{Binding ElementName=BatchGridMask}" />
+                    </DataGrid.OpacityMask>
+                    <DataGrid.Columns>
+                      <DataGridTextColumn Header="File" Binding="{Binding FileName}" Width="180" IsReadOnly="True" ElementStyle="{StaticResource DataGridWrapTextStyle}" />
+                      <DataGridTextColumn Header="Source" Binding="{Binding SourceVersionLabel}" Width="145" IsReadOnly="True" ElementStyle="{StaticResource DataGridWrapTextStyle}" />
+                      <DataGridTextColumn Header="Target" Binding="{Binding TargetVersion.ShortName}" Width="90" IsReadOnly="True" ElementStyle="{StaticResource DataGridWrapTextStyle}" />
+                      <DataGridTextColumn Header="Mode" Binding="{Binding Mode}" Width="105" IsReadOnly="True" ElementStyle="{StaticResource DataGridWrapTextStyle}" />
+                      <DataGridTemplateColumn Header="State" Width="150" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                          <DataTemplate DataType="{x:Type vm:BatchJobViewModel}">
+                            <Border Background="{Binding State, Converter={StaticResource StatusBrush}, ConverterParameter=bg}"
+                                    BorderBrush="{Binding State, Converter={StaticResource StatusBrush}, ConverterParameter=border}"
+                                    BorderThickness="1" CornerRadius="6" Padding="7,2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                              <TextBlock Text="{Binding State, Converter={StaticResource EnumDisplay}}" FontSize="11" FontWeight="SemiBold"
+                                         Foreground="{Binding State, Converter={StaticResource StatusBrush}, ConverterParameter=fg}" />
+                            </Border>
+                          </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                      </DataGridTemplateColumn>
+                      <DataGridTextColumn Header="Status" Binding="{Binding StatusMessage}" Width="*" IsReadOnly="True" ElementStyle="{StaticResource DataGridWrapTextStyle}" />
+                    </DataGrid.Columns>
+                  </DataGrid>
+                </Grid>
+              </Border>
+              <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False"
+                          Visibility="{Binding IsBatchEmpty, Converter={StaticResource BoolToVis}}">
+                <TextBlock Text="No projects in queue" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center" />
+                <TextBlock Text="Drop multiple .aep or .aepx files anywhere, or click + Add Projects." FontSize="12" Foreground="{DynamicResource TextMutedBrush}" Margin="0,4,0,0" HorizontalAlignment="Center" />
+              </StackPanel>
+            </Grid>
+
+            <WrapPanel Margin="0,16,0,0">
+              <Button Content="Start Queue" Style="{StaticResource PrimaryButtonStyle}" Padding="16,9" MinHeight="38" Margin="0,0,8,6"
+                      Command="{Binding StartBatchCommand}" />
+              <Button Content="Pause / Resume" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                      Command="{Binding TogglePauseBatchCommand}" />
+              <Button Content="Cancel All" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                      Command="{Binding CancelAllBatchCommand}" />
+              <Button Content="Move Up" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                      Command="{Binding MoveSelectedBatchUpCommand}" />
+              <Button Content="Move Down" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                      Command="{Binding MoveSelectedBatchDownCommand}" />
+              <Button Content="Remove" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                      Command="{Binding RemoveSelectedBatchJobCommand}" />
+              <Button Content="Retry Failed" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                      Command="{Binding RetryFailedBatchJobsCommand}" />
+              <Button Content="Clear Completed" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                      Command="{Binding ClearCompletedBatchJobsCommand}" />
+            </WrapPanel>
+          </StackPanel>
+
+          <!-- ==================== 3. HISTORY PAGE ==================== -->
+          <StackPanel>
+            <StackPanel.Style>
+              <Style TargetType="StackPanel">
+                <Setter Property="Visibility" Value="Collapsed" />
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding CurrentPage}" Value="{x:Static vm:NavPage.History}">
+                    <Setter Property="Visibility" Value="Visible" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </StackPanel.Style>
+
+            <TextBlock Text="Conversion History" Style="{StaticResource PageTitleStyle}" />
+            <TextBlock Text="Local conversion audit log stored strictly on this device." Margin="0,4,0,18" Foreground="{DynamicResource TextSecondaryBrush}" />
+
+            <Grid Margin="0,0,0,16">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+
+              <Grid Grid.Column="0">
+                <TextBox Text="{Binding HistorySearchText, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Text="Search filename or target..." IsHitTestVisible="False" VerticalAlignment="Center" Margin="13,0,0,0"
+                           Foreground="{DynamicResource TextMutedBrush}"
+                           Visibility="{Binding HistorySearchText, Converter={StaticResource InvNullToVis}}" />
+              </Grid>
+
+              <Border Grid.Column="1" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrushSubtle}" BorderThickness="1" CornerRadius="9" Padding="3" Margin="10,0">
+                <StackPanel Orientation="Horizontal">
+                  <RadioButton Style="{StaticResource SegmentedOptionStyle}" GroupName="HistFilter" Content="All" Padding="11,6"
+                               IsChecked="{Binding HistoryFilterResult, Converter={StaticResource EqConv}, ConverterParameter='All', Mode=OneWay}"
+                               Command="{Binding SetHistoryFilterCommand}" CommandParameter="All" />
+                  <RadioButton Style="{StaticResource SegmentedOptionStyle}" GroupName="HistFilter" Content="Succeeded" Padding="11,6"
+                               IsChecked="{Binding HistoryFilterResult, Converter={StaticResource EqConv}, ConverterParameter='Succeeded', Mode=OneWay}"
+                               Command="{Binding SetHistoryFilterCommand}" CommandParameter="Succeeded" />
+                  <RadioButton Style="{StaticResource SegmentedOptionStyle}" GroupName="HistFilter" Content="Blocked / Failed" Padding="11,6"
+                               IsChecked="{Binding HistoryFilterResult, Converter={StaticResource EqConv}, ConverterParameter='Failed/Blocked', Mode=OneWay}"
+                               Command="{Binding SetHistoryFilterCommand}" CommandParameter="Failed/Blocked" />
+                </StackPanel>
+              </Border>
+
+              <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Refresh" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding RefreshHistoryCommand}" />
+                <Button Content="Clear All" Style="{StaticResource SecondaryButtonStyle}" Margin="8,0,0,0" Command="{Binding ClearAllHistoryCommand}" />
+              </StackPanel>
+            </Grid>
+
+            <Border Style="{StaticResource CardBorderStyle}" Padding="24"
+                    Visibility="{Binding IsHistoryEmpty, Converter={StaticResource BoolToVis}}">
+              <StackPanel HorizontalAlignment="Center">
+                <TextBlock Text="No conversions recorded yet" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center" />
+                <TextBlock Text="Completed and blocked conversions appear here automatically." FontSize="12" Foreground="{DynamicResource TextMutedBrush}" Margin="0,4,0,0" HorizontalAlignment="Center" />
+              </StackPanel>
+            </Border>
+
+            <ItemsControl ItemsSource="{Binding HistoryEntries}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type core:ConversionHistoryEntry}">
+                  <Border Style="{StaticResource CardBorderStyle}" Padding="14,12" Margin="0,0,0,8">
+                    <Grid>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                      </Grid.ColumnDefinitions>
+                      <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                          <TextBlock Text="{Binding SourceFileName}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
+                          <Border Background="{Binding ResultState, Converter={StaticResource StatusBrush}, ConverterParameter=bg}"
+                                  BorderBrush="{Binding ResultState, Converter={StaticResource StatusBrush}, ConverterParameter=border}"
+                                  BorderThickness="1" CornerRadius="5" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding ResultState, Converter={StaticResource EnumDisplay}}" FontSize="10.5" FontWeight="SemiBold"
+                                       Foreground="{Binding ResultState, Converter={StaticResource StatusBrush}, ConverterParameter=fg}" />
+                          </Border>
+                        </StackPanel>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,3,0,0">
+                          <Run Text="{Binding SourceVersionLabel, Mode=OneWay}" />
+                          <Run Text=" → " />
+                          <Run Text="{Binding TargetVersionLabel, Mode=OneWay}" />
+                          <Run Text=" • " />
+                          <Run Text="{Binding TimestampUtc.LocalDateTime, StringFormat='MMM d, HH:mm', Mode=OneWay}" />
+                        </TextBlock>
+                      </StackPanel>
+                      <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Content="Report" Style="{StaticResource SecondaryButtonStyle}" Padding="10,5" MinHeight="30"
+                                Visibility="{Binding ReportPath, Converter={StaticResource NullToVis}}"
+                                Command="{Binding DataContext.ViewHistoryReportCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" />
+                        <Button Content="Folder" Style="{StaticResource SecondaryButtonStyle}" Padding="10,5" MinHeight="30" Margin="6,0,0,0"
+                                Command="{Binding DataContext.OpenHistoryOutputFolderCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" />
+                        <Button Content="Retry" Style="{StaticResource SecondaryButtonStyle}" Padding="10,5" MinHeight="30" Margin="6,0,0,0"
+                                Command="{Binding DataContext.RetryHistoryEntryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" />
+                        <Button Content="✕" Style="{StaticResource SecondaryButtonStyle}" Padding="10,5" MinHeight="30" Margin="6,0,0,0"
+                                Command="{Binding DataContext.RemoveHistoryEntryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" />
+                      </StackPanel>
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <!-- ==================== 4. COMPATIBILITY MATRIX PAGE ==================== -->
+          <StackPanel>
+            <StackPanel.Style>
+              <Style TargetType="StackPanel">
+                <Setter Property="Visibility" Value="Collapsed" />
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding CurrentPage}" Value="{x:Static vm:NavPage.Compatibility}">
+                    <Setter Property="Visibility" Value="Visible" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </StackPanel.Style>
+
+            <Grid Margin="0,0,0,16">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="240" />
+              </Grid.ColumnDefinitions>
+              <StackPanel>
+                <TextBlock Text="Compatibility Reference" Style="{StaticResource PageTitleStyle}" />
+                <TextBlock Text="Honest parser, writer, migration, and target verification status across After Effects releases."
+                           Margin="0,4,0,0" Foreground="{DynamicResource TextSecondaryBrush}" />
+              </StackPanel>
+              <Grid Grid.Column="1" VerticalAlignment="Bottom">
+                <TextBox Text="{Binding MatrixSearchText, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Text="Filter version or format..." IsHitTestVisible="False" VerticalAlignment="Center" Margin="13,0,0,0"
+                           Foreground="{DynamicResource TextMutedBrush}"
+                           Visibility="{Binding MatrixSearchText, Converter={StaticResource InvNullToVis}}" />
+              </Grid>
+            </Grid>
+
+            <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrushSubtle}" BorderThickness="1" CornerRadius="12">
+              <Grid>
+                <Border x:Name="CompatGridMask" Background="Black" CornerRadius="11" />
+                <DataGrid ItemsSource="{Binding FilteredMatrixVersions}" SelectedItem="{Binding SelectedMatrixVersion}"
+                          AutoGenerateColumns="False" CanUserAddRows="False" Height="350" BorderThickness="0"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                  <DataGrid.OpacityMask>
+                    <VisualBrush Visual="{Binding ElementName=CompatGridMask}" />
+                  </DataGrid.OpacityMask>
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Header="Release" Binding="{Binding DisplayName}" Width="185" IsReadOnly="True" ElementStyle="{StaticResource DataGridWrapTextStyle}" />
+                    <DataGridTextColumn Header="App Ver" Binding="{Binding SupportedMinorVersions}" Width="82" IsReadOnly="True" ElementStyle="{StaticResource DataGridWrapTextStyle}" />
+                    <DataGridTextColumn Header="Format" Binding="{Binding FormatMajorVersion}" Width="78" IsReadOnly="True" ElementStyle="{StaticResource DataGridWrapTextStyle}" />
+                    <DataGridTemplateColumn Header="Target Status" Width="142" IsReadOnly="True">
+                      <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type core:AfterEffectsVersionInfo}">
+                          <Border Background="{Binding CompatibilityStatus, Converter={StaticResource StatusBrush}, ConverterParameter=bg}"
+                                  BorderBrush="{Binding CompatibilityStatus, Converter={StaticResource StatusBrush}, ConverterParameter=border}"
+                                  BorderThickness="1" CornerRadius="6" Padding="8,3" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding CompatibilityStatus, Converter={StaticResource EnumDisplay}}" FontSize="11.5" FontWeight="SemiBold"
+                                       Foreground="{Binding CompatibilityStatus, Converter={StaticResource StatusBrush}, ConverterParameter=fg}" />
+                          </Border>
+                        </DataTemplate>
+                      </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Migration Support" Binding="{Binding MigrationSupport}" Width="*" IsReadOnly="True" ElementStyle="{StaticResource DataGridWrapTextStyle}" />
+                  </DataGrid.Columns>
+                </DataGrid>
+              </Grid>
+            </Border>
+
+            <Border Style="{StaticResource CardBorderStyle}" Margin="0,14,0,0"
+                    Visibility="{Binding SelectedMatrixVersion, Converter={StaticResource NullToVis}}">
+              <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                  <TextBlock Text="{Binding SelectedMatrixVersion.DisplayName}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
+                  <Border Background="{Binding SelectedMatrixVersion.CompatibilityStatus, Converter={StaticResource StatusBrush}, ConverterParameter=bg}"
+                          BorderBrush="{Binding SelectedMatrixVersion.CompatibilityStatus, Converter={StaticResource StatusBrush}, ConverterParameter=border}"
+                          BorderThickness="1" CornerRadius="6" Padding="8,2" Margin="10,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding SelectedMatrixVersion.CompatibilityStatus, Converter={StaticResource EnumDisplay}}" FontSize="11" FontWeight="SemiBold"
+                               Foreground="{Binding SelectedMatrixVersion.CompatibilityStatus, Converter={StaticResource StatusBrush}, ConverterParameter=fg}" />
+                  </Border>
+                </StackPanel>
+                <TextBlock Text="{Binding SelectedMatrixVersion.ParserSupport, StringFormat='Parser: {0}'}" Margin="0,2,0,2" Foreground="{DynamicResource TextSecondaryBrush}" />
+                <TextBlock Text="{Binding SelectedMatrixVersion.WriterSupport, StringFormat='Writer: {0}'}" Margin="0,0,0,8" Foreground="{DynamicResource TextSecondaryBrush}" />
+                <TextBlock Text="Known Feature Differences:" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,2,0,4" />
+                <ItemsControl ItemsSource="{Binding SelectedMatrixVersion.KnownFeatureDifferences}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <TextBlock Text="{Binding StringFormat='• {0}'}" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,1.5" />
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+          <!-- ==================== 5. SETTINGS PAGE ==================== -->
+          <StackPanel>
+            <StackPanel.Style>
+              <Style TargetType="StackPanel">
+                <Setter Property="Visibility" Value="Collapsed" />
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding CurrentPage}" Value="{x:Static vm:NavPage.Settings}">
+                    <Setter Property="Visibility" Value="Visible" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </StackPanel.Style>
+
+            <TextBlock Text="Settings" Style="{StaticResource PageTitleStyle}" />
+            <TextBlock Text="Configure preferences, installed After Effects paths, and local privacy." Margin="0,4,0,18" Foreground="{DynamicResource TextSecondaryBrush}" />
+
+            <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,14">
+              <StackPanel>
+                <TextBlock Text="Appearance &amp; Defaults" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,14" />
+                <Grid Margin="0,0,0,12">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="210" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock Text="Theme" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" />
+                  <Border Grid.Column="1" Background="{DynamicResource ElevatedSurfaceBrush}" BorderBrush="{DynamicResource BorderBrushSubtle}" BorderThickness="1" CornerRadius="9" Padding="3" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal">
+                      <RadioButton Style="{StaticResource SegmentedOptionStyle}" GroupName="AppTheme" Content="Dark"
+                                   IsChecked="{Binding SelectedTheme, Converter={StaticResource EqConv}, ConverterParameter='Dark', Mode=OneWay}"
+                                   Command="{Binding SetThemeCommand}" CommandParameter="Dark" />
+                      <RadioButton Style="{StaticResource SegmentedOptionStyle}" GroupName="AppTheme" Content="Light"
+                                   IsChecked="{Binding SelectedTheme, Converter={StaticResource EqConv}, ConverterParameter='Light', Mode=OneWay}"
+                                   Command="{Binding SetThemeCommand}" CommandParameter="Light" />
+                      <RadioButton Style="{StaticResource SegmentedOptionStyle}" GroupName="AppTheme" Content="System"
+                                   IsChecked="{Binding SelectedTheme, Converter={StaticResource EqConv}, ConverterParameter='System', Mode=OneWay}"
+                                   Command="{Binding SetThemeCommand}" CommandParameter="System" />
+                    </StackPanel>
+                  </Border>
+                </Grid>
+                <Grid Margin="0,0,0,14">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="210" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock Text="Output naming template" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" />
+                  <TextBox Grid.Column="1" Text="{Binding SettingOutputTemplate, UpdateSourceTrigger=PropertyChanged}" Width="280" HorizontalAlignment="Left" />
+                </Grid>
+                <CheckBox Content="Generate HTML &amp; JSON conversion reports" IsChecked="{Binding SettingGenerateReports}" Margin="0,5" />
+                <CheckBox Content="Retain intermediate temp files for debugging" IsChecked="{Binding SettingRetainIntermediates}" Margin="0,5" />
+                <CheckBox Content="Enable local conversion history" IsChecked="{Binding SettingEnableHistory}" Margin="0,5" />
+              </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,16">
+              <StackPanel>
+                <TextBlock Text="Detected After Effects Installations" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10" />
+                <ItemsControl ItemsSource="{Binding DetectedAdobeInstalls}" Margin="0,0,0,10">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type core:AdobeInstallationInfo}">
+                      <Border Background="{DynamicResource ElevatedSurfaceBrush}" BorderBrush="{DynamicResource BorderBrushSubtle}" BorderThickness="1" CornerRadius="8" Padding="12,9" Margin="0,0,0,6">
+                        <Grid>
+                          <StackPanel>
+                            <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                            <TextBlock Text="{Binding ExecutablePath}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" Margin="0,2,0,0" />
+                          </StackPanel>
+                          <Border HorizontalAlignment="Right" VerticalAlignment="Center" Background="#1E34D399" BorderBrush="#4A34D399" BorderThickness="1" CornerRadius="5" Padding="7,2">
+                            <TextBlock Text="Installed" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource SuccessBrush}" />
+                          </Border>
+                        </Grid>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <WrapPanel>
+                  <Button Content="Refresh installations" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                          Command="{Binding RefreshAdobeInstallationsCommand}" />
+                  <Button Content="Locate AfterFX.exe..." Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                          Command="{Binding BrowseManualAfterEffectsCommand}" />
+                </WrapPanel>
+                <CheckBox Content="Allow Adobe automation for isolated verification (never closes unsaved user sessions)"
+                          IsChecked="{Binding SettingAllowAdobeAutomation}" Margin="0,10,0,4" />
+                <CheckBox Content="Automatically verify output in target After Effects when installed"
+                          IsChecked="{Binding SettingVerifyWithAe}" Margin="0,4,0,0" />
+              </StackPanel>
+            </Border>
+
+            <WrapPanel>
+              <Button Content="Save Settings" Style="{StaticResource PrimaryButtonStyle}" Padding="18,9" MinHeight="38" Margin="0,0,8,6"
+                      Command="{Binding SaveSettingsCommand}" />
+              <Button Content="Export Diagnostics ZIP" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                      Command="{Binding ExportDiagnosticsCommand}" />
+              <Button Content="Clear Temp Workspace" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                      Command="{Binding ClearTempDataCommand}" />
+              <Button Content="Reset Defaults" Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,6"
+                      Command="{Binding ResetSettingsCommand}" />
+            </WrapPanel>
+          </StackPanel>
+
+          <!-- ==================== 6. HELP PAGE ==================== -->
+          <StackPanel>
+            <StackPanel.Style>
+              <Style TargetType="StackPanel">
+                <Setter Property="Visibility" Value="Collapsed" />
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding CurrentPage}" Value="{x:Static vm:NavPage.Help}">
+                    <Setter Property="Visibility" Value="Visible" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </StackPanel.Style>
+
+            <TextBlock Text="Help &amp; CLI Reference" Style="{StaticResource PageTitleStyle}" />
+            <TextBlock Text="Workflow guide, error codes, and command-line automation." Margin="0,4,0,18" Foreground="{DynamicResource TextSecondaryBrush}" />
+
+            <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,14">
+              <StackPanel>
+                <TextBlock Text="Standard Conversion Workflow" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8" />
+                <TextBlock Text="1. Drop or browse a .aep or .aepx project. VersionFlow hashes and parses it read-only.&#x0a;2. Select your target After Effects release and review compatibility findings.&#x0a;3. Choose Safe Mode (blocks unverified cross-format downgrades), Compatibility Mode, or Experimental Mode (requires explicit acknowledgement).&#x0a;4. Click Convert to generate a structurally validated copy beside your original file."
+                           TextWrapping="Wrap" Foreground="{DynamicResource TextSecondaryBrush}" LineHeight="22" />
+              </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,14">
+              <StackPanel>
+                <TextBlock Text="CLI Commands (versionflow.exe)" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8" />
+                <TextBox IsReadOnly="True" FontFamily="Cascadia Mono, Consolas" FontSize="12" Padding="14,12"
+                         AcceptsReturn="True" VerticalContentAlignment="Top" TextWrapping="Wrap"
+                         Background="{DynamicResource ElevatedSurfaceBrush}"
+                         Text="versionflow versions&#x0a;versionflow inspect &quot;MotionEdit.aep&quot; --chunks&#x0a;versionflow analyse &quot;MotionEdit.aep&quot; --target 2020&#x0a;versionflow convert &quot;MotionEdit.aep&quot; --target 2020 --mode experimental --ack-experimental&#x0a;versionflow batch &quot;D:\Projects&quot; --target 2020&#x0a;versionflow validate &quot;MotionEdit_AE2020.aep&quot; --target 2020" />
+              </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardBorderStyle}">
+              <StackPanel>
+                <TextBlock Text="Error Code Reference" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8" />
+                <TextBlock Text="VF-FMT-001  Invalid file signature (not RIFX/Egg! or AfterEffectsProject XML)&#x0a;VF-FMT-002  Truncated container or invalid chunk length&#x0a;VF-FMT-003  Malformed or prohibited XML/DTD in .aepx&#x0a;VF-VER-001  Unknown project format version&#x0a;VF-CON-001  Blocked by Safe Mode (no verified standalone downgrade path)&#x0a;VF-CON-003  Experimental Mode acknowledgement required&#x0a;VF-VAL-001  Output structural validation failed"
+                           FontFamily="Cascadia Mono, Consolas" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" LineHeight="21" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+          <!-- ==================== 7. ABOUT PAGE ==================== -->
+          <StackPanel>
+            <StackPanel.Style>
+              <Style TargetType="StackPanel">
+                <Setter Property="Visibility" Value="Collapsed" />
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding CurrentPage}" Value="{x:Static vm:NavPage.About}">
+                    <Setter Property="Visibility" Value="Visible" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </StackPanel.Style>
+
+            <Border Style="{StaticResource CardBorderStyle}">
+              <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                  <Image Source="Assets/VersionFlow.png" Width="64" Height="64" RenderOptions.BitmapScalingMode="HighQuality" />
+                  <StackPanel Margin="16,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="VersionFlow" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                    <TextBlock Text="Version 1.0.0 • Create forward. Convert backward." Foreground="{DynamicResource AccentLightBrush}" Margin="0,2,0,0" />
+                  </StackPanel>
+                </StackPanel>
+                <TextBlock Text="VersionFlow is an independent, offline-first Windows utility for inspecting and converting creative project files across After Effects generations."
+                           TextWrapping="Wrap" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,10" />
+                <TextBlock Text="Independence Notice: VersionFlow is not affiliated with, endorsed by, or officially associated with Adobe Inc. Adobe and After Effects are registered trademarks of Adobe Inc."
+                           TextWrapping="Wrap" Foreground="{DynamicResource TextMutedBrush}" FontSize="12" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+          </Grid>
+        </ScrollViewer>
+      </Grid>
+    </Grid>
+
+    <!-- Bottom Status Bar -->
+    <Border Grid.Row="1"
+            Background="{DynamicResource SecondaryBgBrush}"
+            BorderBrush="{DynamicResource BorderBrushSubtle}"
+            BorderThickness="0,1,0,0"
+            Padding="16,0">
+      <Grid VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+          <Ellipse Width="7" Height="7" Fill="{DynamicResource SuccessBrush}" Margin="0,0,8,0" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding StatusBarText}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+          <TextBlock Text="{Binding InstalledAeSummaryText}" FontSize="11.5" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center" />
+          <TextBlock Text="  •  Offline • VersionFlow 1.0.0" FontSize="11.5" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center" />
+        </StackPanel>
+      </Grid>
+    </Border>
+  </Grid>
+</Window>

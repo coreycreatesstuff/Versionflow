@@ -1,0 +1,30 @@
+name: Bug Report
+description: Report a bug, UI issue, or conversion failure in VersionFlow.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: input
+    id: versionflow_version
+    attributes:
+      label: VersionFlow Version
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: ae_versions
+    attributes:
+      label: Source & Target After Effects Versions
+      placeholder: "Source: AE 2026 -> Target: AE 2020"
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to Reproduce & Expected vs Actual Behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error Code / Conversion Report Excerpt
+      description: Attach sanitized report JSON/text without private paths.

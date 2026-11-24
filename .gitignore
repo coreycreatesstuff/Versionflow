@@ -1,0 +1,34 @@
+# Exclude internal docs, fixtures, scripts, tests, compatibility data, and installer sources from GitHub
+docs/
+fixtures/
+scripts/
+tests/
+compatibility/
+installer/
+
+# .NET / Visual Studio / Build artifacts
+bin/
+obj/
+dist/
+publish/
+artifacts/
+TestResults/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+.vscode/
+
+# Windows & Temp artifacts
+Thumbs.db
+Desktop.ini
+*.tmp
+*.log
+*.zip
+
+# After Effects debug/temp files & tester reports
+AEDebug*
+.38*
+verification-report-*.json
+verification-report-*.md
